@@ -1,0 +1,4 @@
+[submodule "DapperOrm"]
+	path = MicroOrm.Dapper.Repositories
+	url = https://github.com/phnx47/dapper-repositories.git
+	branch = main
