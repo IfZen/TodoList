@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Copyright>Copyright ©  2023</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="UserAccountService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiteDB" Version="5.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Business\TodoList.Business.csproj" />
+  </ItemGroup>
+
+</Project>
