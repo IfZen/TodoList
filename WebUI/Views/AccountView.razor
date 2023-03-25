@@ -1,0 +1,145 @@
+﻿@using System.Web
+@using System.Text.RegularExpressions
+@using TodoList.Business.Authentification;
+@using TodoList.WebUI.Blazor.Authentication;
+@*@inject IJSRuntime js;*@
+@inject CustomAuthenticationStateProvider authStateProvider;
+@inject NavigationManager navManager;
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>@(ForCreating ? "Register" : "Updating your account")</h3>
+        </div>
+    </div>
+    @if (ForCreating)
+    {
+        <div class="mb-3">
+            <label>Login*</label>
+            <span class=@LoginDisplayClass>@LoginStatus</span>
+            <input class="form-control" placeholder="Login" @oninput=OnLoginChanged />
+        </div>
+    }
+    @if (_user != null)
+    {
+        @if (ForUpdating)
+        {
+            <div class="mb-3">
+                <label>Current Password</label>
+                <input @bind=curPassword class="form-control" type="password" />
+            </div>
+        }
+        <div class="mb-3">
+            <label>@(ForUpdating ? "New Password" : "Password *")</label>
+            <input @bind=newPassword class="form-control" type="password" />
+        </div>
+        <div class="mb-3">
+            <label>Confirm Password @(ForUpdating ? "" : "*")</label>
+            <input @bind=newPasswordConfirmed  class="form-control" type="password" />
+        </div>
+
+        @*TODO : Would be interesting to generate all of this automatically from business object? https://stackoverflow.com/a/61296414*@
+
+        <div class="mb-3">
+            <label>First Name @(ForUpdating ? "" : "*")</label>
+            <input @bind=_user.FirstName class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Surname @(ForUpdating ? "" : "*")</label>
+            <input @bind=_user.Surname class="form-control"/>
+        </div>
+
+        <div class="mb-3">
+            <label>Email @(ForUpdating ? "" : "*")</label>
+            <input @bind=_user.Email class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <label>Personal note</label><br />
+            <textarea @bind=_user.PersonalNote cols="40" rows="5"></textarea>
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button @onclick="CreateOrUpdateAccount" class="btn btn-primary">@(ForUpdating ? "Update" : "Register")</button>
+            <div class=@ActionStatusClass>
+                @((MarkupString)Regex.Replace(
+                    HttpUtility.HtmlEncode(@ActionStatus ?? ""), "\r?\n|\r", "<br />"))
+            </div>
+        </div>
+    }
+</div>
+
+
+@code
+{
+
+    // To fill if we want to update an existing account, null if to create one
+    [Parameter] public User User { get => _user; init { _user = value; ForCreating = value == null; } }
+    User _user;
+    // To get current authenticated user
+    //[CascadingParameter]
+    //Task<AuthenticationState> authenticationState {get; set; }
+
+    private bool ForCreating = true;
+    private bool ForUpdating { get { return !ForCreating; } }
+
+    #region When creating handle login first
+
+    private string LoginStatus;
+    private string LoginDisplayClass;
+
+    void OnLoginChanged(ChangeEventArgs args)
+    {        
+        try
+        {
+            _user = authStateProvider.TryCreateNewUser(args.Value.ToString());
+            LoginStatus = "✓";
+            LoginDisplayClass = "valid-message";
+        }
+        catch (UserUnderstandableException ex)
+        {
+            _user = null;
+            LoginStatus = ex.Message;
+            LoginDisplayClass = "validation-message"; // declared in default css of blazor
+        }
+    }
+
+    #endregion
+
+    // Then we have business object then temporary password
+    private string curPassword;
+    private string newPassword;
+    private string newPasswordConfirmed;
+    private string ActionStatus;
+    private string ActionStatusClass;
+
+    private async Task CreateOrUpdateAccount()
+    {
+        try
+        {
+            //var authState = await authenticationState;
+            if (ForCreating)
+                await authStateProvider.RegisterNewUser(_user, newPassword, newPasswordConfirmed);
+            else
+                await authStateProvider.UpdateAccount(_user, curPassword, newPassword, newPasswordConfirmed);
+            
+            // Erase password from memory (especially in case networks disconnected just after the line above and before 
+            // the navigateto below which make the page to throw a javascript issue and let data in memory.
+            curPassword = null;
+            newPassword = null;
+            newPasswordConfirmed = null;
+        }
+        catch (UserUnderstandableException ex)
+        {
+            ActionStatus = ex.Message;
+            ActionStatusClass = "validation-message";
+            //await js.InvokeVoidAsync("alert", ex.Message);
+            return;
+        }
+        ActionStatus = (ForCreating ? "User created, check your email!" : "Account udpated!") + System.Environment.NewLine
+                     + "Redirecting to main page in 3s";
+        ActionStatusClass = "valid-message";
+
+        StateHasChanged(); // otherwise UI is not refresh until the end of the method
+        await Task.Delay(3000);
+        navManager.NavigateTo("/", true);
+    }
+}

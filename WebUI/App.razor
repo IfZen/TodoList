@@ -1,0 +1,15 @@
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            @*"AuthorizeRouteView" below instead of just "RouteView"" make AuthorizeView to work in page / component*@
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layouts.Main)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(Layouts.Main)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

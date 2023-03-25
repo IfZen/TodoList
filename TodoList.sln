@@ -8,6 +8,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoList.Business", "Busine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoList.Persistence", "DAL\TodoList.Persistence.csproj", "{A577A62B-EF5F-4354-97D1-A1D87B965B11}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoList.WebUI.Blazor", "WebUI\TodoList.WebUI.Blazor.csproj", "{9349F751-8A6F-403C-A6B6-6A02E7601837}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,18 @@ Global
 		{A577A62B-EF5F-4354-97D1-A1D87B965B11}.Release|x64.Build.0 = Release|Any CPU
 		{A577A62B-EF5F-4354-97D1-A1D87B965B11}.Release|x86.ActiveCfg = Release|Any CPU
 		{A577A62B-EF5F-4354-97D1-A1D87B965B11}.Release|x86.Build.0 = Release|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Debug|x64.Build.0 = Debug|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Debug|x86.Build.0 = Debug|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Release|x64.ActiveCfg = Release|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Release|x64.Build.0 = Release|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Release|x86.ActiveCfg = Release|Any CPU
+		{9349F751-8A6F-403C-A6B6-6A02E7601837}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

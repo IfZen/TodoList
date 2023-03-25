@@ -23,7 +23,7 @@ namespace TodoList.Business.Authentification
         {
             var user = GetUserState(login);
             var currentPassword = GetPassword(login);
-            if (currentPassword?.HashedPassword != PBKDF2Hash(password))
+            if (currentPassword?.HashedPassword != PBKDF2Hash(password ?? ""))
                  throw new BusinessException("Invalid User Name or Password!", null);
             var token = _persistence.AccessTokens.Create();
             token.Login = login;
@@ -249,7 +249,9 @@ namespace TodoList.Business.Authentification
                 throw new BusinessException("Login must be at least 2 characters!", null);
             if (login.Length > 32)
                 throw new BusinessException("Login must be 32 characters long top!", null);
-            if (!Regex.Match(login, @"^(\p{Ll}|\p{Lu}|[-_. ])+$").Success)
+            if (char.IsDigit(login[0]))
+                throw new BusinessException("Login canot begin with digit!", null);
+            if (!Regex.Match(login, @"^(\p{Ll}|\p{Lu}|[-_. 0-9])+$").Success)
                 throw new BusinessException("Login can be composed only of letters, '_', '-', '.', and internal space are allowed!", null);
         }
 

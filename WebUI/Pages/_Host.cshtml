@@ -1,0 +1,11 @@
+﻿@page "/"
+@namespace TodoList.WebUI.Blazor.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+@*
+    Changed from ServerPrerendered to Server to make CustomAuthenticationStateProvider.GetAuthenticationStateAsync works 
+    And because NotAuthorized content is display before Authorized which make DOM content to blink to user (ugly!)
+*@
+<component type="typeof(App)" render-mode="Server" />

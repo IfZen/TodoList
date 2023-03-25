@@ -1,0 +1,23 @@
+﻿@page "/AccountUpdate"
+@using TodoList.Business.Authentification;
+@using TodoList.WebUI.Blazor.Authentication;
+@inject CustomAuthenticationStateProvider authStateProvider;
+
+@if (user == null)
+{
+    <span>Loading...</span>
+}
+else
+{
+    <AccountView User=@user />
+}
+
+@code
+{
+    private User user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await authStateProvider.GetCurrentUser();
+    }
+}

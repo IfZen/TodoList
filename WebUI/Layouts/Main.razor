@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+@inject CustomAuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@using TodoList.WebUI.Blazor.Authentication
+
+<PageTitle>TodoList.WebUI (Blazor)</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <AuthorizeView Roles="Administrator,User">
+            <Authorized>
+                <a @onclick="Logout" href="javascript:void(0)">Logout</a>
+                <a href="/AccountUpdate">Account</a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/login">Login</a>
+                <a href="/AccountRegister">Register</a>
+            </NotAuthorized>
+        </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code
+{
+     private async Task Logout()
+     {
+         await authStateProvider.UpdateAuthenticationState(null);
+         navManager.NavigateTo("/", true);
+     }
+}

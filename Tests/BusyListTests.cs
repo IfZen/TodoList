@@ -37,8 +37,8 @@ namespace TodoList.Tests
         }
         Service _todoListMgr;
 
-        [Test]
-        public void CheckDefaultCategories()
+        [TestCase(null, TestName = "1) Check existing default categories")]
+        public void CheckExistingDefaultCategories(object _)
         {
             var builtInCats = _todoListMgr.GetAllCategories();
             Assert.AreEqual(builtInCats.Count, 3);
@@ -48,8 +48,8 @@ namespace TodoList.Tests
             Assert.IsTrue(builtInCats.All(c => c.IsBuiltIn));
         }
 
-        [Test]
-        public void AddRemoveCategory()
+        [TestCase(null, TestName = "2) Add remove category")]
+        public void AddRemoveCategory(object _)
         {
             var cat = _todoListMgr.NewCategory();
             cat.Name = "test";
@@ -66,8 +66,8 @@ namespace TodoList.Tests
             Assert.IsTrue(builtInCats.All(c => c.Name != "test"));
         }
 
-        [Test]
-        public void AddRemoveWorkItems()
+        [TestCase(null, TestName = "3) Add/Remove work items")]
+        public void AddRemoveWorkItems(object _)
         {
             var item = _todoListMgr.NewWorkItem();
             item.Title = "Do Test";
