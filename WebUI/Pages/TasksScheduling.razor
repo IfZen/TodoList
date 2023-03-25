@@ -1,4 +1,4 @@
-@page "/tasksScheduling"
+﻿@page "/tasksScheduling"
 @attribute [Authorize(Roles = "Administrator,User")]
 
 @using TodoList.Business.Authentification
@@ -17,6 +17,10 @@
 </div>
 <br />
 <ul>
+    @*
+      TODO implement this https://stackoverflow.com/questions/72225905/blazor-drag-drop-list-elements
+           using generic component so we can instanciate component TodoListItem !  https://learn.microsoft.com/en-us/aspnet/core/blazor/components/templated-components?view=aspnetcore-7.0 !
+    *@
 
     @foreach (var workItem in WorkItems)
     {

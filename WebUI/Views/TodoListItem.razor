@@ -1,6 +1,7 @@
 ﻿@using TodoList.Business.BusyList;
 
 <li class="FlexLayoutContainer workItem @(Item.Done ? "done" : "")">
+    <img src="/Images/draggableItem.png" width="30" />
     <img src=@StatusImageUrl width="30" @onclick="OnToggleStatusClick"/>
 @*    There is the insteresting <span contenteditable="true"></span> to use, but it seems binding is not yet handled simply by blazor
     So for later maybe we'll have to do some hack to encapsule a copoent nwith javascript (and hidden input for the binding)
