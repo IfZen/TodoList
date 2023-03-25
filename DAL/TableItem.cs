@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 
 using TodoList.Business.Ports;
 
@@ -24,9 +23,8 @@ namespace TodoList.Persistence
             if (_id == null)
                 lock (Creator)
                     if (_id == null)
-                        _id = Interlocked.Increment(ref _seed);
+                        _id = Creator.Service._seeds.GetNewIdFor(Creator);
         }
-        static long _seed;
 
         internal abstract Table Creator { get; }
         public IPersistenceService PersistenceService { get => Creator.Service; }

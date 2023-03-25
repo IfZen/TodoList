@@ -40,8 +40,8 @@ namespace TodoList.Tests
             return user;
         }
 
-        [Test]
-        public void DatabaseCreationWorks()
+        [TestCase(null, TestName = "1) Initial database works/is enough")]
+        public void DatabaseCreationWorks(object _)
         {
             var (db, adminUser, adminPassword) = CreateDefaultDatabase();
             var userService = new Business.Authentification.Service(db);
@@ -54,8 +54,8 @@ namespace TodoList.Tests
         }
 
 
-        [Test]
-        public void UserCreation()
+        [TestCase(null, TestName = "2) User Creation")]
+        public void UserCreation(object _)
         {
             var (db, adminUser, adminPassword) = CreateDefaultDatabase();
             var userService = new Business.Authentification.Service(db);
@@ -86,8 +86,8 @@ namespace TodoList.Tests
             Assert.IsTrue(token.IsValid());
         }
 
-        [Test]
-        public void ChangingRole()
+        [TestCase(null, TestName = "3) Changing Role Of Users")]
+        public void ChangingRoleOfUsers(object _)
         {
             var (db, adminUser, adminPassword) = CreateDefaultDatabase();
             var userService = new Business.Authentification.Service(db);

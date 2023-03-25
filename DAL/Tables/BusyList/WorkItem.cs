@@ -12,7 +12,7 @@ namespace TodoList.Persistence.Tables
         public string Title          { get; set; }
         public string Description    { get; set; }
         public bool   Done           { get; set; }
-        public string OwningLogin { get; set; }
+        public string OwningLogin    { get; set; }
 
         public override void CopyFrom(IWorkItemState state)
         {

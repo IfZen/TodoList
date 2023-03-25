@@ -11,7 +11,7 @@ using TodoList.Business.Ports;
 
 namespace TodoList.Persistence
 {
-    public class Service : Business.Authentification.IPersistenceService, Business.BusyList.IPersistenceService
+    public partial class Service : Business.Authentification.IPersistenceService, Business.BusyList.IPersistenceService
     {
         public IRepository<IUserState>             Users => _users;
         public IRepository<IPasswordState>         Passwords => _passwords;
@@ -24,6 +24,8 @@ namespace TodoList.Persistence
 
         public Service()
         {
+            InitHiLoSeeds(out _seeds);
+
             _users = new Table<Tables.User, IUserState>(this);
             _passwords = new Table<Tables.Password, IPasswordState>(this);
             _accessTokens = new Table<Tables.AccessToken, IAccessTokenState>(this);

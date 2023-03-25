@@ -8,13 +8,15 @@ using TodoList.Business.Ports;
 
 namespace TodoList.Persistence
 {
-    public class Table
+    public abstract class Table
     {
         public Table(Service service)
         {
             Service = service;
         }
-        public IPersistenceService Service { get; }
+        public Service Service { get; }
+
+        protected internal abstract string TableName { get; }
     }
 
     public partial class Table<TTableItem, ITableItem> : Table, IRepository<ITableItem>
@@ -24,8 +26,16 @@ namespace TodoList.Persistence
         public Table(Service service)
             : base(service)
         {
+            if (service._seeds != null)
+            {
+                var state = service._seeds.Create();
+                state.TableName = typeof(TTableItem).Name;
+                service._seeds.Upsert(state);
+            }
         }
-        readonly Dictionary<long, TTableItem> _records = new();
+        protected readonly Dictionary<long, TTableItem> _records = new();
+
+        protected internal override string TableName { get { return typeof(TTableItem).Name; } }
 
         public List<ITableItem> Get(Func<ITableItem, bool> predicate = null)
         {
@@ -56,7 +66,7 @@ namespace TodoList.Persistence
 
         // This version return the record instance in database.
         // It must be cloned after if retunred to user
-        TTableItem _GetById(long id)
+        protected TTableItem _GetById(long id)
         {
             lock (_records)
             {
@@ -80,7 +90,7 @@ namespace TodoList.Persistence
         {
             Upsert(new[] { item }, getUniqueKeys);
         }
-        public void Upsert(IEnumerable<ITableItem> items, params Expression<Func<ITableItem, object>>[] getUniqueKeys)
+        public virtual void Upsert(IEnumerable<ITableItem> items, params Expression<Func<ITableItem, object>>[] getUniqueKeys)
         {
             var getUniqueKeysCompiled = CompileUniqueKeysDescription(getUniqueKeys);
 
