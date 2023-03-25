@@ -1,0 +1,70 @@
+﻿/* Include the padding and border in an element's total width and height */
+* {
+  box-sizing: border-box;
+}
+
+/* Remove margins and padding from the list */
+ul
+{
+    /* Remove default bullet appearing before list item
+    We will use a "grip" image to make user able to drag them) */
+    list-style-type: none;
+    /* remove the space used by bullet (ie:reset default setting of browser) */
+    margin: 0;
+    padding: 0;
+}
+
+/* Style the header */
+.header
+{
+    padding: 30px 40px;
+    color: #f44336;
+    text-align: center;
+}
+
+/* Clear floats after the header */
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the input */
+#newItemTitle
+{
+    margin: 0;
+    border-radius: 0;
+    width: 75%;
+    padding: 10px;
+    float: left;
+    font-size: 16px;
+}
+
+/* Style the "Add" button */
+.addBtn {
+  padding: 10px;
+  width: 25%;
+  background: #d9d9d9;
+  color: #555;
+  float: left;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+}
+
+/* note: 100% is baseline so 85% is slightly darker, 
+   20% would be significantly darker */
+.addBtn:hover
+{
+    filter: brightness(110%);
+    /*background-color: #bbb;*/
+}
+
+
+.clicks-disabled
+{
+    filter: brightness(75%);
+    pointer-events: none
+}

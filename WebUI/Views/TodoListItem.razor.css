@@ -1,0 +1,39 @@
+/* Make width of element in "li" manipulable like layout in other technology : */
+/* { */
+.FlexLayoutContainer
+{
+    display: flex;
+    /* center verticaly text if image are on same line */
+    align-items: center;
+}
+
+/* so now input take all remaining space*/
+.FlexLayoutContainer input
+{
+    flex: 1;
+    padding: 10px;
+}
+/* TODO: use that for add button instead https://developer.mozilla.org/en-US/docs/Web/CSS/filter-function/grayscale */
+
+/* Set all odd list items to a different color (zebra-stripes) */
+.workItem:nth-child(odd)
+{
+    background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+.workItem input:hover
+{
+    background: #ddd;
+}
+
+.workItem input
+{
+    border: 0px solid;
+}   
+
+/* When clicked on, add a background color and strike out text */
+.workItem.done
+{
+    text-decoration: line-through;
+}

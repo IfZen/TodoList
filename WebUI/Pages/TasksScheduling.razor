@@ -1,0 +1,83 @@
+@page "/tasksScheduling"
+@attribute [Authorize(Roles = "Administrator,User")]
+
+@using TodoList.Business.Authentification
+@using TodoList.WebUI.Blazor.Authentication;
+@using TodoList.Business.BusyList;
+@inject CustomAuthenticationStateProvider authStateProvider;
+@inject TodoList.Business.BusyList.Service todoListMgr;
+
+<PageTitle>Task Scheduling</PageTitle>
+@*TODO make them draggable / reorderable: https://stackoverflow.com/a/59304613*@
+@*to read https://stackoverflow.com/questions/60503529/blazor-how-to-bind-nullable-object-to-select*@
+<div class="header">
+  <h2>My To Do List</h2>
+    <input type="text" id="newItemTitle" @bind=NewWorkItemTitle @bind:event=oninput placeholder="New thing to do...tomorrow">
+    <span @onclick="Add" class="@AddButtonClass addBtn">Add</span>
+</div>
+<br />
+<ul>
+
+    @foreach (var workItem in WorkItems)
+    {
+        @*
+            TODO: Is passing reference "workItem" instead of an id make performance bad ?
+            Anyway it makes code stronger and easier to work with when having non-large set of data
+        *@
+        <TodoListItem Item=@workItem OnChanged=OnWorkItemChanged OnDelete=@OnWorkItemDelete/>
+    }
+</ul>
+
+
+@*
+So I don't forgot how to add script that compiles if needed. Is there a better way ?
+<script suppress-error="BL9992"></script>
+*@
+
+@code
+{
+    // TODO : utiliser ca pour simplifier ?
+    // To get current authenticated user
+    // [CascadingParameter]
+    // Task<AuthenticationState> authenticationState {get; set; }
+
+
+    // Must not be null, because binding occurs before OnInitializedAsync is done
+    // Is there a better event that execute completelty before binding to avoid this wrapper ?
+    List<WorkItem> WorkItems = new List<WorkItem>();
+    User user;
+    AccessToken token;
+
+    protected override async Task OnInitializedAsync()
+    { 
+        // Binding occurs _while_ this async part is done, so editable.user is still null.
+        // this is why we created editable wrapper. 
+        user = await authStateProvider.GetCurrentUser();
+        token = await authStateProvider.GetToken();
+        todoListMgr.Initialize(user, token);
+        WorkItems = todoListMgr.GetWorkItems();
+    }
+
+    private string AddButtonClass { get => string.IsNullOrWhiteSpace(NewWorkItemTitle) ? "clicks-disabled" : "";  }
+    private string NewWorkItemTitle { get => _NewWorkItemTitle; set { _NewWorkItemTitle = value; StateHasChanged(); } } string _NewWorkItemTitle;
+
+    void Add()
+    {
+        var newWorkItem = todoListMgr.NewWorkItem();
+        newWorkItem.Title = NewWorkItemTitle;
+        newWorkItem.Save();
+        WorkItems.Add(newWorkItem);
+    }
+
+    void OnWorkItemChanged(WorkItem item)
+    {
+        item.Save();
+    }
+
+    // Arg class for events are defined here https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-3.1
+    void OnWorkItemDelete(WorkItem item)
+    {
+        todoListMgr.Delete(item);
+        WorkItems.Remove(item);
+    }
+}

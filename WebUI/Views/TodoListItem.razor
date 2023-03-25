@@ -1,0 +1,62 @@
+﻿@using TodoList.Business.BusyList;
+
+<li class="FlexLayoutContainer workItem @(Item.Done ? "done" : "")">
+    <img src=@StatusImageUrl width="30" @onclick="OnToggleStatusClick"/>
+@*    There is the insteresting <span contenteditable="true"></span> to use, but it seems binding is not yet handled simply by blazor
+    So for later maybe we'll have to do some hack to encapsule a copoent nwith javascript (and hidden input for the binding)
+*@
+    <input @bind=Item.Title @bind:event=oninput  @onkeyup="TitleChanged"  />
+
+    <img src="/Images/stateDelete.png" width="30" @onclick="OnBtnDeleteClick"/>
+</li>
+
+@code
+{
+    [Parameter] public WorkItem Item { get; init; }
+
+    [Parameter] public EventCallback<WorkItem> OnChanged { get; set; }
+    [Parameter] public EventCallback<WorkItem> OnDelete  { get; set; }
+
+    private string StatusImageUrl => "/Images/" + (Item.Done ? "stateDone.png" : "statePending.png");
+
+    Task OnToggleStatusClick(MouseEventArgs e)
+    {
+        Item.Done = !Item.Done;
+        return OnChanged.InvokeAsync(Item);
+    }
+
+    //See https://github.com/majorimi/blazor-components/blob/master/.github/docs/DebounceInputs.md
+    Task delayedEventTask;
+    DateTime timeOfEventUtc;
+    object _lock = new object();
+    void TitleChanged(KeyboardEventArgs e)
+    {
+        lock (_lock)
+        {
+            timeOfEventUtc = DateTime.UtcNow + TimeSpan.FromMilliseconds(300);
+            if (delayedEventTask == null)
+                delayedEventTask = UpdateTitleAfterAWhile();
+        }
+    }
+
+    async Task UpdateTitleAfterAWhile()
+    {
+        await Task.Delay(timeOfEventUtc - DateTime.UtcNow);
+        // Seems the right time
+        lock (_lock)
+        {
+            if (DateTime.UtcNow >= timeOfEventUtc)
+            {
+                delayedEventTask = null;
+                OnChanged.InvokeAsync(Item);
+            }
+            else // Otherwise we reschedule again
+                delayedEventTask = UpdateTitleAfterAWhile();
+        }
+    }
+    
+    Task OnBtnDeleteClick(MouseEventArgs e)
+    {
+        return OnDelete.InvokeAsync(Item);
+    }
+}
