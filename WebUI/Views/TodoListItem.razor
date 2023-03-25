@@ -6,7 +6,11 @@
     So for later maybe we'll have to do some hack to encapsule a copoent nwith javascript (and hidden input for the binding)
 *@
     <input @bind=Item.Title @bind:event=oninput  @onkeyup="TitleChanged"  />
-
+    
+@*
+    TODO : Insert here a tag box like that https://demos.devexpress.com/blazor/tagbox for categories
+           or with some standard libraries: https://stackoverflow.com/questions/65744610/blazor-autocomplete-tagging
+*@    
     <img src="/Images/stateDelete.png" width="30" @onclick="OnBtnDeleteClick"/>
 </li>
 
